@@ -1,0 +1,102 @@
+{
+  "id": "cosmos",
+  "title": "Cosmos",
+  "artRef": "/art/cosmos.jpg",
+  "motifs": ["spiral", "void", "constellation"],
+  "particles": { "type": "dust", "density": 24 },
+  "facts": [
+    { "text": "There are more stars in the observable universe than grains of sand on every beach on Earth.", "slot": "top-left" },
+    { "text": "A spoonful of a neutron star would weigh about a billion tons.", "slot": "top" },
+    { "text": "Light from the Andromeda galaxy left home before our species existed.", "slot": "top-right" },
+    { "text": "The cosmic microwave background is a fossil glow from 380,000 years after the Big Bang.", "slot": "right" },
+    { "text": "Most of the universe is invisible to us — only 5% is ordinary matter.", "slot": "bottom-right" },
+    { "text": "Galaxies are not still; they fall through the void in slow, vast currents.", "slot": "bottom" },
+    { "text": "If you could fold space, the nearest star would still be unspeakably far.", "slot": "bottom-left" },
+    { "text": "The cosmos has no center. Every point believes itself the middle.", "slot": "left" }
+  ],
+  "child": {
+    "id": "milky-way",
+    "title": "The Milky Way",
+    "artRef": "/art/milky-way.jpg",
+    "motifs": ["spiral", "dust-lane", "constellation"],
+    "particles": { "type": "dust", "density": 28 },
+    "facts": [
+      { "text": "Our galaxy is a spiral with arms named Perseus, Sagittarius, and Orion.", "slot": "top-left" },
+      { "text": "At the heart of the Milky Way sleeps a black hole called Sagittarius A*.", "slot": "top" },
+      { "text": "It takes the Sun 230 million years to circle the galactic center once.", "slot": "top-right" },
+      { "text": "The dark lanes you see are not empty — they are clouds of cold dust.", "slot": "right" },
+      { "text": "Billions of rogue planets drift between the stars, untethered.", "slot": "bottom-right" },
+      { "text": "Andromeda is rushing toward us at 110 kilometers per second.", "slot": "bottom" },
+      { "text": "The Milky Way will collide with Andromeda in roughly 4.5 billion years.", "slot": "bottom-left" },
+      { "text": "Most of the galaxy's mass is invisible halo — dark matter we cannot touch.", "slot": "left" }
+    ],
+    "child": {
+      "id": "solar-system",
+      "title": "The Solar System",
+      "artRef": "/art/solar-system.jpg",
+      "motifs": ["orbit", "ellipse", "spiral"],
+      "particles": { "type": "dust", "density": 18 },
+      "facts": [
+        { "text": "The Sun contains 99.8% of the mass of the Solar System.", "slot": "top-left" },
+        { "text": "Jupiter shields the inner planets from countless stray comets.", "slot": "top" },
+        { "text": "A day on Venus is longer than its year.", "slot": "top-right" },
+        { "text": "Saturn's rings are mostly ice — they would float in a bathtub.", "slot": "right" },
+        { "text": "Pluto's heart-shaped plain is named Tombaugh Regio.", "slot": "bottom-right" },
+        { "text": "Beyond Neptune lies the Kuiper Belt, a frozen archive of the early system.", "slot": "bottom" },
+        { "text": "The Oort Cloud is a sphere of icy bodies a light-year across.", "slot": "bottom-left" },
+        { "text": "Voyager 1 has left the Sun's bubble and now drifts in interstellar space.", "slot": "left" }
+      ],
+      "child": {
+        "id": "earth",
+        "title": "Earth",
+        "artRef": "/art/earth.jpg",
+        "motifs": ["wave", "leaf", "orbit"],
+        "particles": { "type": "bubbles", "density": 22 },
+        "facts": [
+          { "text": "Earth is the only world we know where rain falls and rivers run.", "slot": "top-left" },
+          { "text": "The Moon is slowly drifting away — about 3.8 cm per year.", "slot": "top" },
+          { "text": "There is more fresh water in the atmosphere than in all the rivers combined.", "slot": "top-right" },
+          { "text": "Lightning strikes the planet about 8 million times each day.", "slot": "right" },
+          { "text": "The deepest part of the ocean would swallow Mount Everest whole.", "slot": "bottom-right" },
+          { "text": "Earth's magnetic field flips polarity every few hundred thousand years.", "slot": "bottom" },
+          { "text": "Most of the oxygen you breathe comes from ocean plankton.", "slot": "bottom-left" },
+          { "text": "If Earth were the size of an apple, its atmosphere would be thinner than the skin.", "slot": "left" }
+        ],
+        "child": {
+          "id": "forest",
+          "title": "The Forest",
+          "artRef": "/art/forest.jpg",
+          "motifs": ["leaf", "branch", "wave"],
+          "particles": { "type": "embers", "density": 16 },
+          "facts": [
+            { "text": "Trees in a forest share sugar and warnings through underground fungal threads.", "slot": "top-left" },
+            { "text": "A single mature oak can host more than 2,000 species in its lifetime.", "slot": "top" },
+            { "text": "Forests breathe — global CO2 dips every northern summer.", "slot": "top-right" },
+            { "text": "The smell of rain on dry leaves is called petrichor.", "slot": "right" },
+            { "text": "Some aspen groves are a single organism with thousands of trunks.", "slot": "bottom-right" },
+            { "text": "Owls fly in near-silence thanks to fringed feather edges.", "slot": "bottom" },
+            { "text": "Moss has no roots — it drinks straight from the air.", "slot": "bottom-left" },
+            { "text": "A teaspoon of forest soil can hold a billion living things.", "slot": "left" }
+          ],
+          "child": {
+            "id": "leaf",
+            "title": "The Leaf",
+            "artRef": "/art/leaf.jpg",
+            "motifs": ["leaf", "spiral", "branch"],
+            "particles": { "type": "dust", "density": 12 },
+            "facts": [
+              { "text": "Inside each leaf, chloroplasts catch photons and weave them into sugar.", "slot": "top-left" },
+              { "text": "Veins in a leaf branch by the same rule as rivers and lightning.", "slot": "top" },
+              { "text": "Stomata on the underside of leaves open and close like tiny mouths.", "slot": "top-right" },
+              { "text": "Autumn color is not painted on — it is revealed when green retreats.", "slot": "right" },
+              { "text": "A leaf is mostly water, held in place by an architecture of cellulose.", "slot": "bottom-right" },
+              { "text": "Photosynthesis is the slow theft of light from a star 150 million km away.", "slot": "bottom" },
+              { "text": "Some leaves track the Sun across the sky each day.", "slot": "bottom-left" },
+              { "text": "Every breath you take has passed through a leaf at least once.", "slot": "left" }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
