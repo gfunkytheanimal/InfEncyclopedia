@@ -3,6 +3,13 @@ import type { ThemeNode } from "../types";
 
 export const ZOOM_THRESHOLD = 6.0;
 export const INVERSE_THRESHOLD = 1 / ZOOM_THRESHOLD;
+// Hysteresis: trigger swap-deeper at exactly 6.0, but trigger swap-shallower
+// only once we've crossed below 1/6.5 (~0.1538), tighter than the geometric
+// boundary 1/6. The swap math (zoom_new = zoom_old * 6) keeps geometry
+// continuous regardless of when we trigger, so this purely buys safety
+// against float wobble re-entering the trigger band post-swap.
+const SWAP_IN_THRESHOLD = ZOOM_THRESHOLD;
+const SWAP_OUT_THRESHOLD = 1 / 6.5;
 const LERP = 0.12;
 const MIN_ZOOM = INVERSE_THRESHOLD;
 
@@ -69,11 +76,11 @@ export function useZoom(root: ThemeNode): ZoomState {
       const next = cur + (tgt - cur) * LERP;
       zoomRef.current = next;
 
-      if (next >= ZOOM_THRESHOLD && depthRef.current < maxDepthRef.current) {
+      if (next >= SWAP_IN_THRESHOLD && depthRef.current < maxDepthRef.current) {
         depthRef.current += 1;
         zoomRef.current = next / ZOOM_THRESHOLD;
         targetRef.current = targetRef.current / ZOOM_THRESHOLD;
-      } else if (next <= INVERSE_THRESHOLD && depthRef.current > 0) {
+      } else if (next <= SWAP_OUT_THRESHOLD && depthRef.current > 0) {
         depthRef.current -= 1;
         zoomRef.current = next * ZOOM_THRESHOLD;
         targetRef.current = targetRef.current * ZOOM_THRESHOLD;

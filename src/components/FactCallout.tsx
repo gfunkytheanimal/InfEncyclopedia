@@ -12,12 +12,17 @@ const SLOT_STYLES: Record<FactSlot, CSSProperties> = {
   "left":         { top: "50%",   left: "5%", transform: "translateY(-50%)" },
 };
 
+function smoothstep(a: number, b: number, x: number): number {
+  const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+}
+
+// Plateau roughly centered in log space on [1/6, 6]: full from ~0.9 to ~3.8,
+// smoothstep ramps at the edges so facts neither pop nor jitter near a swap.
 function factOpacity(parentZoom: number): number {
-  if (parentZoom < 0.45) return 0;
-  if (parentZoom < 1.0) return (parentZoom - 0.45) / 0.55;
-  if (parentZoom < 4.0) return 1;
-  if (parentZoom < 6.0) return (6.0 - parentZoom) / 2.0;
-  return 0;
+  const fadeIn = smoothstep(0.4, 0.9, parentZoom);
+  const fadeOut = 1 - smoothstep(3.8, 5.7, parentZoom);
+  return fadeIn * fadeOut;
 }
 
 interface Props {
