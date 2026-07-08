@@ -34,7 +34,6 @@ export function Frame({
       }}
     >
       <SplatBackground node={node} size={frameSize} />
-      <BackgroundArt node={node} size={frameSize} />
       {node.particles && (
         <ParticleLayer
           spec={node.particles}
