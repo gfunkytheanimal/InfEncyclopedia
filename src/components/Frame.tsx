@@ -1,5 +1,5 @@
 import type { ThemeNode } from "../types";
-import { BackgroundArt } from "./BackgroundArt";
+import { SplatBackground } from "./SplatBackground";
 import { FactCallout } from "./FactCallout";
 import { ParticleLayer } from "./ParticleLayer";
 
@@ -33,6 +33,7 @@ export function Frame({
         transformOrigin: `${frameSize / 2}px ${frameSize / 2}px`,
       }}
     >
+      <SplatBackground node={node} size={frameSize} />
       <BackgroundArt node={node} size={frameSize} />
       {node.particles && (
         <ParticleLayer

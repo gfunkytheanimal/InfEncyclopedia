@@ -24,6 +24,7 @@ export interface ThemeNode {
   id: string;
   title: string;
   artRef?: string;
+  splatSource?: string;
   motifs: string[];
   particles: ParticleSpec;
   facts: Fact[];
