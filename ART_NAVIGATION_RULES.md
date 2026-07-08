@@ -8,10 +8,11 @@ Users need to know *where* they can zoom in to find deeper knowledge.
 - **The Glow of Depth:** Objects that contain child nodes emit a subtle, pulsating volumetric glow. The intensity of the glow correlates to the depth or density of the information within.
 - **Micro-Detailing:** As a user approaches an object, macro textures fade into micro-geometry (e.g., a smooth stone reveals crystalline structures on close inspection), signaling that deeper layers exist.
 
-## 2. Portals for Analogies and Concept Leaps
+## 2. Semantic Portals
 
 How do we represent relationships that aren't strictly parent/child?
 - **Analogy Portals:** A shimmering, mirror-like surface embedded in the environment. Looking into it reveals a completely different biome/node. For example, within the "Human Heart" node, a portal might show a pumping "Steam Engine." Stepping through it acts as a hyper-link.
+- **Different Portal Styles:** Portals should have distinct visual styles representing different semantic relationships (e.g., historical precedent, mathematical formula derivation, biological parallel). Users learn these relationships subconsciously based on the portal's aesthetic.
 - **Bridges:** Physical bridges or pathways connecting two adjacent islands of knowledge (Lateral relationships).
 - **Rivers / Energy Flows:** Flowing particles that trace cause-and-effect paths. Following a river of light from the "Sun" node leads directly to the "Earth's Atmosphere" node.
 
@@ -36,11 +37,9 @@ When zooming from a macro-node to a micro-node (e.g., Earth to a Forest), a hard
 - **Alpha Crossfade / LOD Swap:** The parent model dissolves into particle dust or wireframe, while the child environment materializes from the center outwards.
 - **Focal Blur:** Heavy Depth of Field (DOF) is applied during the transition to mask LOD popping and simulate the physical feeling of a lens changing focus.
 
-## 6. Color Theory and Semantic Meaning
+## 6. Environmental Mood over Rigid Palettes
 
-Color is used systematically across the encyclopedia to categorize knowledge:
-- **Warm colors (Reds/Oranges):** Physical sciences, thermodynamics, action, causality.
-- **Cool colors (Blues/Teals):** Abstract mathematics, logic, structural systems.
-- **Greens/Earthy tones:** Biology, ecology, organic systems.
-- **Monochrome/Gold:** History, philosophy, human artifacts.
-Users will subliminally learn to identify the "genre" of a node based on its ambient lighting.
+We do not force rigid color palettes (e.g., "Biology is always green" or "Math is always blue").
+Instead, we let the environment carry its own mood.
+- **Deep sea biology** feels distinct from **blood cells**, which feel distinct from **arctic ecosystems** or **alien worlds**.
+- The atmosphere, lighting, and physical properties of the environment natively communicate the subject matter.
