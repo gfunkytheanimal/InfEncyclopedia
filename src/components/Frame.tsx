@@ -1,5 +1,5 @@
 import type { ThemeNode } from "../types";
-import { BackgroundArt } from "./BackgroundArt";
+import { SplatBackground } from "./SplatBackground";
 import { FactCallout } from "./FactCallout";
 
 const INNER_RATIO = 1 / 6;
@@ -32,7 +32,7 @@ export function Frame({
         transformOrigin: `${frameSize / 2}px ${frameSize / 2}px`,
       }}
     >
-      <BackgroundArt node={node} size={frameSize} />
+      <SplatBackground node={node} size={frameSize} />
       <div className="frame-border" />
       <div className="facts-layer">
         {node.facts.map((fact, i) => (
