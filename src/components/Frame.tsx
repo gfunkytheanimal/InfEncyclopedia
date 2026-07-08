@@ -1,6 +1,7 @@
 import type { ThemeNode } from "../types";
 import { SplatBackground } from "./SplatBackground";
 import { FactCallout } from "./FactCallout";
+import { ParticleLayer } from "./ParticleLayer";
 
 const INNER_RATIO = 1 / 6;
 
@@ -33,6 +34,14 @@ export function Frame({
       }}
     >
       <SplatBackground node={node} size={frameSize} />
+      <BackgroundArt node={node} size={frameSize} />
+      {node.particles && (
+        <ParticleLayer
+          spec={node.particles}
+          size={frameSize}
+          parentZoom={parentZoom}
+        />
+      )}
       <div className="frame-border" />
       <div className="facts-layer">
         {node.facts.map((fact, i) => (
