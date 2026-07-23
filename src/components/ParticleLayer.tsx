@@ -84,6 +84,81 @@ function spawnParticle(type: ParticleType, size: number, initial: boolean): Part
   return p;
 }
 
+function updateAndDrawDust(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
+  p.x += p.vx;
+  p.y += p.vy;
+  p.seed += 0.02;
+  p.vx += Math.sin(p.seed) * 0.01;
+  p.vy += Math.cos(p.seed) * 0.01;
+
+  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
+    return true;
+  }
+
+  const alpha = 0.3 + Math.sin(p.seed) * 0.3;
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(220, 220, 230, ${alpha})`;
+  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  return false;
+}
+
+function updateAndDrawBubbles(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
+  p.x += Math.sin(p.seed + p.life * 0.03) * 0.5;
+  p.y += p.vy;
+
+  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
+    return true;
+  }
+
+  ctx.beginPath();
+  ctx.strokeStyle = `rgba(200, 220, 255, 0.6)`;
+  ctx.lineWidth = 1.5;
+  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = `rgba(200, 220, 255, 0.15)`;
+  ctx.fill();
+
+  return false;
+}
+
+function updateAndDrawEmbers(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
+  p.x += p.vx + Math.sin(p.seed + p.life * 0.1) * 0.8;
+  p.y += p.vy;
+
+  if (p.life > p.maxLife) {
+    return true;
+  }
+  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
+    return true;
+  }
+
+  const alpha = Math.max(0, 1 - (p.life / p.maxLife));
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(255, 120, 50, ${alpha * 0.8})`;
+  ctx.arc(p.x, p.y, p.radius * alpha, 0, Math.PI * 2);
+  ctx.fill();
+
+  return false;
+}
+
+function updateAndDrawSnow(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
+  p.x += Math.sin(p.seed + p.life * 0.02) * 1.0;
+  p.y += p.vy;
+
+  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
+    return true;
+  }
+
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(255, 255, 255, 0.8)`;
+  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  return false;
+}
+
 function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], size: number) {
   ctx.clearRect(0, 0, size, size);
 
@@ -91,62 +166,20 @@ function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], siz
     const p = particles[i];
     p.life++;
 
-    // Movement
-    if (p.type === "dust") {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.seed += 0.02;
-      p.vx += Math.sin(p.seed) * 0.01;
-      p.vy += Math.cos(p.seed) * 0.01;
-    } else if (p.type === "bubbles") {
-      p.x += Math.sin(p.seed + p.life * 0.03) * 0.5;
-      p.y += p.vy;
-    } else if (p.type === "embers") {
-      p.x += p.vx + Math.sin(p.seed + p.life * 0.1) * 0.8;
-      p.y += p.vy;
-    } else if (p.type === "snow") {
-      p.x += Math.sin(p.seed + p.life * 0.02) * 1.0;
-      p.y += p.vy;
-    }
-
-    // Wrap / Respawn
     let respawn = false;
-    if (p.type === "embers" && p.life > p.maxLife) {
-      respawn = true;
-    }
-    if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
-      respawn = true;
+
+    if (p.type === "dust") {
+      respawn = updateAndDrawDust(ctx, p, size);
+    } else if (p.type === "bubbles") {
+      respawn = updateAndDrawBubbles(ctx, p, size);
+    } else if (p.type === "embers") {
+      respawn = updateAndDrawEmbers(ctx, p, size);
+    } else if (p.type === "snow") {
+      respawn = updateAndDrawSnow(ctx, p, size);
     }
 
     if (respawn) {
       particles[i] = spawnParticle(p.type, size, false);
-      continue;
-    }
-
-    // Draw
-    ctx.beginPath();
-    let alpha = 1;
-    if (p.type === "embers") {
-      alpha = Math.max(0, 1 - (p.life / p.maxLife));
-      ctx.fillStyle = `rgba(255, 120, 50, ${alpha * 0.8})`;
-      ctx.arc(p.x, p.y, p.radius * alpha, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (p.type === "dust") {
-      alpha = 0.3 + Math.sin(p.seed) * 0.3;
-      ctx.fillStyle = `rgba(220, 220, 230, ${alpha})`;
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (p.type === "bubbles") {
-      ctx.strokeStyle = `rgba(200, 220, 255, 0.6)`;
-      ctx.lineWidth = 1.5;
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.fillStyle = `rgba(200, 220, 255, 0.15)`;
-      ctx.fill();
-    } else if (p.type === "snow") {
-      ctx.fillStyle = `rgba(255, 255, 255, 0.8)`;
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fill();
     }
   }
 }
