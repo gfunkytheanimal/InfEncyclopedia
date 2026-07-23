@@ -128,26 +128,32 @@ function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], siz
     let alpha = 1;
     if (p.type === "embers") {
       alpha = Math.max(0, 1 - (p.life / p.maxLife));
-      ctx.fillStyle = `rgba(255, 120, 50, ${alpha * 0.8})`;
+      ctx.globalAlpha = alpha * 0.8;
+      ctx.fillStyle = "#ff7832";
       ctx.arc(p.x, p.y, p.radius * alpha, 0, Math.PI * 2);
       ctx.fill();
     } else if (p.type === "dust") {
       alpha = 0.3 + Math.sin(p.seed) * 0.3;
-      ctx.fillStyle = `rgba(220, 220, 230, ${alpha})`;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = "#dcdce6";
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       ctx.fill();
     } else if (p.type === "bubbles") {
-      ctx.strokeStyle = `rgba(200, 220, 255, 0.6)`;
+      ctx.globalAlpha = 0.6;
+      ctx.strokeStyle = "#c8dcff";
       ctx.lineWidth = 1.5;
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.fillStyle = `rgba(200, 220, 255, 0.15)`;
+      ctx.globalAlpha = 0.15;
+      ctx.fillStyle = "#c8dcff";
       ctx.fill();
     } else if (p.type === "snow") {
-      ctx.fillStyle = `rgba(255, 255, 255, 0.8)`;
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = "#ffffff";
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
   }
 }
 
