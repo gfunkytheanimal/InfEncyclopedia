@@ -97,9 +97,11 @@ function updateAndDrawDust(ctx: CanvasRenderingContext2D, p: Particle, size: num
 
   const alpha = 0.3 + Math.sin(p.seed) * 0.3;
   ctx.beginPath();
-  ctx.fillStyle = `rgba(220, 220, 230, ${alpha})`;
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = "rgb(220, 220, 230)";
   ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
   ctx.fill();
+  ctx.globalAlpha = 1.0;
 
   return false;
 }
@@ -113,12 +115,15 @@ function updateAndDrawBubbles(ctx: CanvasRenderingContext2D, p: Particle, size: 
   }
 
   ctx.beginPath();
-  ctx.strokeStyle = `rgba(200, 220, 255, 0.6)`;
+  ctx.globalAlpha = 0.6;
+  ctx.strokeStyle = "rgb(200, 220, 255)";
   ctx.lineWidth = 1.5;
   ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
   ctx.stroke();
-  ctx.fillStyle = `rgba(200, 220, 255, 0.15)`;
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = "rgb(200, 220, 255)";
   ctx.fill();
+  ctx.globalAlpha = 1.0;
 
   return false;
 }
@@ -136,9 +141,11 @@ function updateAndDrawEmbers(ctx: CanvasRenderingContext2D, p: Particle, size: n
 
   const alpha = Math.max(0, 1 - (p.life / p.maxLife));
   ctx.beginPath();
-  ctx.fillStyle = `rgba(255, 120, 50, ${alpha * 0.8})`;
+  ctx.globalAlpha = alpha * 0.8;
+  ctx.fillStyle = "rgb(255, 120, 50)";
   ctx.arc(p.x, p.y, p.radius * alpha, 0, Math.PI * 2);
   ctx.fill();
+  ctx.globalAlpha = 1.0;
 
   return false;
 }
@@ -152,9 +159,11 @@ function updateAndDrawSnow(ctx: CanvasRenderingContext2D, p: Particle, size: num
   }
 
   ctx.beginPath();
-  ctx.fillStyle = `rgba(255, 255, 255, 0.8)`;
+  ctx.globalAlpha = 0.8;
+  ctx.fillStyle = "rgb(255, 255, 255)";
   ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
   ctx.fill();
+  ctx.globalAlpha = 1.0;
 
   return false;
 }
