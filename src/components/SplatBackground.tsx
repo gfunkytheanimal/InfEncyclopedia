@@ -1,15 +1,14 @@
 import { useState } from "react";
 import type { ThemeNode } from "../types";
 import { PlaceholderArt } from "./PlaceholderArt";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, extend, Object3DNode } from "@react-three/fiber";
 import { LumaSplatsThree, LumaSplatsSemantics } from "@lumaai/luma-web";
-import { extend } from "@react-three/fiber";
 
 extend({ LumaSplats: LumaSplatsThree });
 
 declare module "@react-three/fiber" {
   interface ThreeElements {
-    lumaSplats: any;
+    lumaSplats: Object3DNode<LumaSplatsThree, typeof LumaSplatsThree>;
   }
 }
 
