@@ -10,14 +10,23 @@ export interface ThemePalette {
   ink: string;
 }
 
+const paletteCache = new Map<string, ThemePalette>();
+
 export function paletteForId(id: string): ThemePalette {
+  if (paletteCache.has(id)) {
+    return paletteCache.get(id)!;
+  }
+
   const h = hashString(id);
   const hue = h % 360;
   const sat = 30 + ((h >>> 8) % 30);
   const lit = 14 + ((h >>> 16) % 10);
-  return {
+  const palette = {
     bg: `hsl(${hue} ${sat}% ${lit}%)`,
     accent: `hsl(${(hue + 35) % 360} ${sat + 20}% ${lit + 35}%)`,
     ink: `hsl(${(hue + 200) % 360} ${sat - 10}% ${lit + 50}%)`,
   };
+
+  paletteCache.set(id, palette);
+  return palette;
 }
