@@ -38,6 +38,28 @@ describe('placeholderArt', () => {
       expect(palette1).toEqual(palette2);
     });
 
+    it('returns exact same object reference for the same id (caching)', () => {
+      const palette1 = paletteForId('cache-test-id');
+      const palette2 = paletteForId('cache-test-id');
+      expect(palette1).toBe(palette2);
+    });
+
+    it('returns expected palette values for known inputs', () => {
+      const palette1 = paletteForId('test');
+      expect(palette1).toEqual({
+        bg: 'hsl(37 56% 16%)',
+        accent: 'hsl(72 76% 51%)',
+        ink: 'hsl(237 46% 66%)'
+      });
+
+      const palette2 = paletteForId('hello');
+      expect(palette2).toEqual({
+        bg: 'hsl(257 44% 20%)',
+        accent: 'hsl(292 64% 55%)',
+        ink: 'hsl(97 34% 70%)'
+      });
+    });
+
     it('returns correctly formatted hsl strings', () => {
       const palette = paletteForId('formatting-test');
 
