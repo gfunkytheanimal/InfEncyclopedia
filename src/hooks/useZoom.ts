@@ -93,7 +93,9 @@ export function useZoom(root: ThemeNode): ZoomState {
         targetRef.current = ZOOM_THRESHOLD;
       }
 
-      setTick((t) => (t + 1) | 0);
+      if (Math.abs(zoomRef.current - targetRef.current) > 0.001) {
+        setTick((t) => (t + 1) | 0);
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
