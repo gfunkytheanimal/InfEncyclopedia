@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { ParticleSpec, ParticleType } from "../types";
+import { smoothstep } from "../utils/math";
 
 interface Props {
   spec: ParticleSpec;
@@ -18,11 +19,6 @@ interface Particle {
   alpha: number;
   type: ParticleType;
   seed: number;
-}
-
-function smoothstep(a: number, b: number, x: number): number {
-  const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
-  return t * t * (3 - 2 * t);
 }
 
 function particleOpacity(parentZoom: number): number {
