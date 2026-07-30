@@ -19,6 +19,7 @@ interface Particle {
   alpha: number;
   type: ParticleType;
   seed: number;
+  updateFn: (ctx: CanvasRenderingContext2D, p: Particle, size: number) => boolean;
 }
 
 function particleOpacity(parentZoom: number): number {
@@ -37,47 +38,6 @@ function createParticles(spec: ParticleSpec, size: number): Particle[] {
     particles.push(spawnParticle(spec.type, size, true));
   }
   return particles;
-}
-
-function spawnParticle(type: ParticleType, size: number, initial: boolean): Particle {
-  const p: Particle = {
-    x: Math.random() * size,
-    y: Math.random() * size,
-    vx: 0,
-    vy: 0,
-    radius: 1,
-    life: 0,
-    maxLife: 100 + Math.random() * 200,
-    alpha: Math.random(),
-    type,
-    seed: Math.random() * Math.PI * 2,
-  };
-
-  if (type === "dust") {
-    p.vx = (Math.random() - 0.5) * 0.3;
-    p.vy = (Math.random() - 0.5) * 0.3;
-    p.radius = 1 + Math.random() * 1.5;
-  } else if (type === "bubbles") {
-    p.y = initial ? Math.random() * size : size + 20;
-    p.vy = -0.5 - Math.random() * 1.5;
-    p.radius = 2 + Math.random() * 6;
-  } else if (type === "embers") {
-    p.y = initial ? Math.random() * size : size + 20;
-    p.vx = (Math.random() - 0.5) * 1.5;
-    p.vy = -1.0 - Math.random() * 2.5;
-    p.radius = 1 + Math.random() * 2.5;
-    p.maxLife = 50 + Math.random() * 100;
-  } else if (type === "snow") {
-    p.y = initial ? Math.random() * size : -20;
-    p.vy = 0.5 + Math.random() * 1.5;
-    p.radius = 1.5 + Math.random() * 2;
-  }
-
-  if (initial) {
-    p.life = Math.random() * p.maxLife;
-  }
-
-  return p;
 }
 
 function updateAndDrawDust(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
@@ -164,6 +124,63 @@ function updateAndDrawSnow(ctx: CanvasRenderingContext2D, p: Particle, size: num
   return false;
 }
 
+function spawnParticle(type: ParticleType, size: number, initial: boolean): Particle {
+  let updateFn: (ctx: CanvasRenderingContext2D, p: Particle, size: number) => boolean;
+
+  if (type === "dust") {
+    updateFn = updateAndDrawDust;
+  } else if (type === "bubbles") {
+    updateFn = updateAndDrawBubbles;
+  } else if (type === "embers") {
+    updateFn = updateAndDrawEmbers;
+  } else if (type === "snow") {
+    updateFn = updateAndDrawSnow;
+  } else {
+    // Fallback for "none" or unexpected types
+    updateFn = () => false;
+  }
+
+  const p: Particle = {
+    x: Math.random() * size,
+    y: Math.random() * size,
+    vx: 0,
+    vy: 0,
+    radius: 1,
+    life: 0,
+    maxLife: 100 + Math.random() * 200,
+    alpha: Math.random(),
+    type,
+    seed: Math.random() * Math.PI * 2,
+    updateFn,
+  };
+
+  if (type === "dust") {
+    p.vx = (Math.random() - 0.5) * 0.3;
+    p.vy = (Math.random() - 0.5) * 0.3;
+    p.radius = 1 + Math.random() * 1.5;
+  } else if (type === "bubbles") {
+    p.y = initial ? Math.random() * size : size + 20;
+    p.vy = -0.5 - Math.random() * 1.5;
+    p.radius = 2 + Math.random() * 6;
+  } else if (type === "embers") {
+    p.y = initial ? Math.random() * size : size + 20;
+    p.vx = (Math.random() - 0.5) * 1.5;
+    p.vy = -1.0 - Math.random() * 2.5;
+    p.radius = 1 + Math.random() * 2.5;
+    p.maxLife = 50 + Math.random() * 100;
+  } else if (type === "snow") {
+    p.y = initial ? Math.random() * size : -20;
+    p.vy = 0.5 + Math.random() * 1.5;
+    p.radius = 1.5 + Math.random() * 2;
+  }
+
+  if (initial) {
+    p.life = Math.random() * p.maxLife;
+  }
+
+  return p;
+}
+
 function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], size: number) {
   ctx.clearRect(0, 0, size, size);
 
@@ -171,17 +188,7 @@ function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], siz
     const p = particles[i];
     p.life++;
 
-    let respawn = false;
-
-    if (p.type === "dust") {
-      respawn = updateAndDrawDust(ctx, p, size);
-    } else if (p.type === "bubbles") {
-      respawn = updateAndDrawBubbles(ctx, p, size);
-    } else if (p.type === "embers") {
-      respawn = updateAndDrawEmbers(ctx, p, size);
-    } else if (p.type === "snow") {
-      respawn = updateAndDrawSnow(ctx, p, size);
-    }
+    const respawn = p.updateFn(ctx, p, size);
 
     if (respawn) {
       particles[i] = spawnParticle(p.type, size, false);
