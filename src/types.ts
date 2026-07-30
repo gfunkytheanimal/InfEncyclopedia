@@ -15,6 +15,19 @@ export interface Fact {
   slot: FactSlot;
 }
 
+export interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  life: number;
+  maxLife: number;
+  alpha: number;
+  type: ParticleType;
+  seed: number;
+}
+
 export interface ParticleSpec {
   type: ParticleType;
   density: number;

@@ -1,24 +1,12 @@
 import { useEffect, useRef } from "react";
-import type { ParticleSpec, ParticleType } from "../types";
+import type { ParticleSpec, ParticleType, Particle } from "../types";
 import { smoothstep } from "../utils/math";
+import { particleBehaviors } from "./particles";
 
 interface Props {
   spec: ParticleSpec;
   size: number;
   parentZoom: number;
-}
-
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  radius: number;
-  life: number;
-  maxLife: number;
-  alpha: number;
-  type: ParticleType;
-  seed: number;
 }
 
 function particleOpacity(parentZoom: number): number {
@@ -53,115 +41,14 @@ function spawnParticle(type: ParticleType, size: number, initial: boolean): Part
     seed: Math.random() * Math.PI * 2,
   };
 
-  if (type === "dust") {
-    p.vx = (Math.random() - 0.5) * 0.3;
-    p.vy = (Math.random() - 0.5) * 0.3;
-    p.radius = 1 + Math.random() * 1.5;
-  } else if (type === "bubbles") {
-    p.y = initial ? Math.random() * size : size + 20;
-    p.vy = -0.5 - Math.random() * 1.5;
-    p.radius = 2 + Math.random() * 6;
-  } else if (type === "embers") {
-    p.y = initial ? Math.random() * size : size + 20;
-    p.vx = (Math.random() - 0.5) * 1.5;
-    p.vy = -1.0 - Math.random() * 2.5;
-    p.radius = 1 + Math.random() * 2.5;
-    p.maxLife = 50 + Math.random() * 100;
-  } else if (type === "snow") {
-    p.y = initial ? Math.random() * size : -20;
-    p.vy = 0.5 + Math.random() * 1.5;
-    p.radius = 1.5 + Math.random() * 2;
-  }
+  const behavior = particleBehaviors[type] || particleBehaviors.none;
+  behavior.init(p, size, initial);
 
   if (initial) {
     p.life = Math.random() * p.maxLife;
   }
 
   return p;
-}
-
-function updateAndDrawDust(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
-  p.x += p.vx;
-  p.y += p.vy;
-  p.seed += 0.02;
-  p.vx += Math.sin(p.seed) * 0.01;
-  p.vy += Math.cos(p.seed) * 0.01;
-
-  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
-    return true;
-  }
-
-  const alpha = 0.3 + Math.sin(p.seed) * 0.3;
-  ctx.beginPath();
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = "rgb(220, 220, 230)";
-  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 1.0;
-
-  return false;
-}
-
-function updateAndDrawBubbles(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
-  p.x += Math.sin(p.seed + p.life * 0.03) * 0.5;
-  p.y += p.vy;
-
-  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
-    return true;
-  }
-
-  ctx.beginPath();
-  ctx.globalAlpha = 0.6;
-  ctx.strokeStyle = "rgb(200, 220, 255)";
-  ctx.lineWidth = 1.5;
-  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.globalAlpha = 0.15;
-  ctx.fillStyle = "rgb(200, 220, 255)";
-  ctx.fill();
-  ctx.globalAlpha = 1.0;
-
-  return false;
-}
-
-function updateAndDrawEmbers(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
-  p.x += p.vx + Math.sin(p.seed + p.life * 0.1) * 0.8;
-  p.y += p.vy;
-
-  if (p.life > p.maxLife) {
-    return true;
-  }
-  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
-    return true;
-  }
-
-  const alpha = Math.max(0, 1 - (p.life / p.maxLife));
-  ctx.beginPath();
-  ctx.globalAlpha = alpha * 0.8;
-  ctx.fillStyle = "rgb(255, 120, 50)";
-  ctx.arc(p.x, p.y, p.radius * alpha, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 1.0;
-
-  return false;
-}
-
-function updateAndDrawSnow(ctx: CanvasRenderingContext2D, p: Particle, size: number): boolean {
-  p.x += Math.sin(p.seed + p.life * 0.02) * 1.0;
-  p.y += p.vy;
-
-  if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
-    return true;
-  }
-
-  ctx.beginPath();
-  ctx.globalAlpha = 0.8;
-  ctx.fillStyle = "rgb(255, 255, 255)";
-  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 1.0;
-
-  return false;
 }
 
 function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], size: number) {
@@ -171,17 +58,8 @@ function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], siz
     const p = particles[i];
     p.life++;
 
-    let respawn = false;
-
-    if (p.type === "dust") {
-      respawn = updateAndDrawDust(ctx, p, size);
-    } else if (p.type === "bubbles") {
-      respawn = updateAndDrawBubbles(ctx, p, size);
-    } else if (p.type === "embers") {
-      respawn = updateAndDrawEmbers(ctx, p, size);
-    } else if (p.type === "snow") {
-      respawn = updateAndDrawSnow(ctx, p, size);
-    }
+    const behavior = particleBehaviors[p.type] || particleBehaviors.none;
+    const respawn = behavior.updateAndDraw(ctx, p, size);
 
     if (respawn) {
       particles[i] = spawnParticle(p.type, size, false);
