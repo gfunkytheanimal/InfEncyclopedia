@@ -3,8 +3,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useZoom, ZOOM_THRESHOLD, INVERSE_THRESHOLD } from './useZoom';
 import type { ThemeNode } from '../types';
 
-const LERP = 0.12;
-
 describe('useZoom', () => {
   const rootNode: ThemeNode = {
     id: 'root',
@@ -99,7 +97,6 @@ describe('useZoom', () => {
     expect(result.current.depth).toBe(1);
 
     // Now zoom out
-    const SWAP_OUT_THRESHOLD = 1 / 6.5;
     act(() => {
       // Current target is 10 / 6 = 1.666...
       // We want target to be less than SWAP_OUT_THRESHOLD

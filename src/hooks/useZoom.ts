@@ -114,6 +114,7 @@ export function useZoom(root: ThemeNode): ZoomState {
         zoomRef.current = 1.0;
         targetRef.current = 1.0;
         interactedAtRef.current = performance.now();
+        setTick((t) => (t + 1) | 0);
       },
       registerInteraction: () => {
         interactedAtRef.current = performance.now();
@@ -122,8 +123,13 @@ export function useZoom(root: ThemeNode): ZoomState {
   }
 
   const depth = depthRef.current;
-  const activeNode = walkToDepth(root, depth);
-  const pathFromRoot = buildPath(root, depth);
+
+  const { activeNode, pathFromRoot } = useMemo(() => {
+    return {
+      activeNode: walkToDepth(root, depth),
+      pathFromRoot: buildPath(root, depth),
+    };
+  }, [root, depth]);
 
   return {
     zoom: zoomRef.current,
