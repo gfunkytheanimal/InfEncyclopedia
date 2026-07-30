@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { ThemeNode } from "../types";
 import { PlaceholderArt } from "./PlaceholderArt";
 import { Canvas, extend, Object3DNode } from "@react-three/fiber";
@@ -17,19 +17,23 @@ interface Props {
   size: number;
 }
 
+const FRAME_BG_STYLE: React.CSSProperties = { pointerEvents: 'none' };
+const SPLAT_CONTAINER_STYLE: React.CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 1, filter: 'blur(2px) contrast(1.2) brightness(0.8)' };
+const CANVAS_STYLE: React.CSSProperties = { width: '100%', height: '100%' };
+
 export function SplatBackground({ node, size }: Props) {
   const [imgOk, setImgOk] = useState(false);
   const splatSource = node.splatSource; // Assume we will add splatSource to ThemeNode
 
   return (
-    <div className="frame-bg" style={{ pointerEvents: 'none' }}>
+    <div className="frame-bg" style={FRAME_BG_STYLE}>
       <PlaceholderArt node={node} size={size} />
 
       {splatSource ? (
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 1, filter: 'blur(2px) contrast(1.2) brightness(0.8)' }}>
+        <div style={SPLAT_CONTAINER_STYLE}>
           <Canvas
             camera={{ position: [0, 0, 5], fov: 45 }}
-            style={{ width: '100%', height: '100%' }}
+            style={CANVAS_STYLE}
             gl={{ antialias: false }}
           >
             <ambientLight intensity={1} />
