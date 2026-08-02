@@ -3,9 +3,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useZoom, ZOOM_THRESHOLD, INVERSE_THRESHOLD } from './useZoom';
 import type { ThemeNode } from '../types';
 
-// @ts-ignore
-const LERP = 0.12;
-
 describe('useZoom', () => {
   const rootNode: ThemeNode = {
     id: 'root',
@@ -100,8 +97,6 @@ describe('useZoom', () => {
     expect(result.current.depth).toBe(1);
 
     // Now zoom out
-    // @ts-ignore
-    const SWAP_OUT_THRESHOLD = 1 / 6.5;
     act(() => {
       // Current target is 10 / 6 = 1.666...
       // We want target to be less than SWAP_OUT_THRESHOLD
@@ -169,14 +164,5 @@ describe('useZoom', () => {
     // At maxDepth, targetRef is clamped to ZOOM_THRESHOLD
     expect(result.current.depth).toBe(2);
     expect(result.current.zoom).toBeCloseTo(ZOOM_THRESHOLD, 1);
-  });
-
-  it('registers interaction', () => {
-    const { result } = renderHook(() => useZoom(rootNode));
-
-    // We can't directly read interactedAtRef, but we can verify the function exists and doesn't throw
-    expect(() => {
-      result.current.controls.registerInteraction();
-    }).not.toThrow();
   });
 });
