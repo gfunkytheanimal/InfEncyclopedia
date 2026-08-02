@@ -2,6 +2,7 @@ import type { ThemeNode } from "../types";
 import { SplatBackground } from "./SplatBackground";
 import { FactCallout } from "./FactCallout";
 import { ParticleLayer } from "./ParticleLayer";
+import { BackgroundArt } from "./BackgroundArt";
 
 const INNER_RATIO = 1 / 6;
 

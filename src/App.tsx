@@ -14,10 +14,19 @@ function useFrameSize(): number {
       : Math.min(window.innerWidth, window.innerHeight),
   );
   useEffect(() => {
-    const onResize = () =>
-      setSize(Math.min(window.innerWidth, window.innerHeight));
+    let rafId: number | null = null;
+    const onResize = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        setSize(Math.min(window.innerWidth, window.innerHeight));
+        rafId = null;
+      });
+    };
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
   return size;
 }
