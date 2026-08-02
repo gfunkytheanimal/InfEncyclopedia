@@ -17,13 +17,14 @@ interface Props {
   size: number;
 }
 
-const FRAME_BG_STYLE: React.CSSProperties = { pointerEvents: 'none' };
-const SPLAT_CONTAINER_STYLE: React.CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 1, filter: 'blur(2px) contrast(1.2) brightness(0.8)' };
-const CANVAS_STYLE: React.CSSProperties = { width: '100%', height: '100%' };
+const CANVAS_CAMERA = { position: [0, 0, 5] as [number, number, number], fov: 45 };
+const CANVAS_STYLE = { width: '100%', height: '100%' };
+const CANVAS_GL = { antialias: false };
+const LUMA_POSITION = [0, 0, 0] as [number, number, number];
 
 export function SplatBackground({ node, size }: Props) {
   const [imgOk, setImgOk] = useState(false);
-  const splatSource = node.splatSource; // Assume we will add splatSource to ThemeNode
+  const splatSource = node.splatSource;
 
   return (
     <div className="frame-bg" style={FRAME_BG_STYLE}>
@@ -32,15 +33,15 @@ export function SplatBackground({ node, size }: Props) {
       {splatSource ? (
         <div style={SPLAT_CONTAINER_STYLE}>
           <Canvas
-            camera={{ position: [0, 0, 5], fov: 45 }}
+            camera={CANVAS_CAMERA}
             style={CANVAS_STYLE}
-            gl={{ antialias: false }}
+            gl={CANVAS_GL}
           >
             <ambientLight intensity={1} />
             <lumaSplats
               semanticsMask={LumaSplatsSemantics.FOREGROUND}
               source={splatSource}
-              position={[0, 0, 0]}
+              position={LUMA_POSITION}
               scale={1}
             />
           </Canvas>
