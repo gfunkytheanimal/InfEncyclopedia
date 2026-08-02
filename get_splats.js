@@ -1,5 +1,13 @@
 import fs from 'fs';
-const data = fs.readFileSync('/tmp/file_attachments/splat-dive (1)/src/lib/splatData.ts', 'utf-8');
+
+const filePath = process.argv[2];
+
+if (!filePath) {
+  console.error('Usage: node get_splats.js <file_path>');
+  process.exit(1);
+}
+
+const data = fs.readFileSync(filePath, 'utf-8');
 
 let out = [];
 let lines = data.split('\n');
