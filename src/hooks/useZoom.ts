@@ -115,8 +115,13 @@ export function useZoom(root: ThemeNode): ZoomState {
   }
 
   const depth = depthRef.current;
-  const activeNode = walkToDepth(root, depth);
-  const pathFromRoot = buildPath(root, depth);
+
+  const { activeNode, pathFromRoot } = useMemo(() => {
+    return {
+      activeNode: walkToDepth(root, depth),
+      pathFromRoot: buildPath(root, depth),
+    };
+  }, [root, depth]);
 
   return {
     zoom: zoomRef.current,
