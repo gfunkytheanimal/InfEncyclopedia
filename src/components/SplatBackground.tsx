@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { ThemeNode } from "../types";
 import { PlaceholderArt } from "./PlaceholderArt";
 import { Canvas, extend, Object3DNode } from "@react-three/fiber";
@@ -27,11 +27,11 @@ export function SplatBackground({ node, size }: Props) {
   const splatSource = node.splatSource;
 
   return (
-    <div className="frame-bg" style={{ pointerEvents: 'none' }}>
+    <div className="frame-bg" style={FRAME_BG_STYLE}>
       <PlaceholderArt node={node} size={size} />
 
       {splatSource ? (
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 1, filter: 'blur(2px) contrast(1.2) brightness(0.8)' }}>
+        <div style={SPLAT_CONTAINER_STYLE}>
           <Canvas
             camera={CANVAS_CAMERA}
             style={CANVAS_STYLE}
