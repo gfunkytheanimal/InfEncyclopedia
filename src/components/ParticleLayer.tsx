@@ -81,6 +81,7 @@ function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], siz
     if (respawn) {
       particles[i] = spawnParticle(p.type, size, false);
     }
+    ctx.globalAlpha = 1;
   }
 }
 
