@@ -16,7 +16,6 @@ const MIN_ZOOM = INVERSE_THRESHOLD;
 export interface ZoomControls {
   zoomBy: (factor: number) => void;
   reset: () => void;
-  registerInteraction: () => void;
 }
 
 export interface ZoomState {
@@ -53,7 +52,6 @@ export function useZoom(root: ThemeNode): ZoomState {
   const zoomRef = useRef(1.0);
   const targetRef = useRef(1.0);
   const depthRef = useRef(0);
-  const interactedAtRef = useRef(0);
 
   const maxDepth = useMemo(() => {
     let n: ThemeNode | undefined = root;
@@ -107,17 +105,11 @@ export function useZoom(root: ThemeNode): ZoomState {
     controlsRef.current = {
       zoomBy: (factor: number) => {
         targetRef.current *= factor;
-        interactedAtRef.current = performance.now();
       },
       reset: () => {
         depthRef.current = 0;
         zoomRef.current = 1.0;
         targetRef.current = 1.0;
-        interactedAtRef.current = performance.now();
-        setTick((t) => (t + 1) | 0);
-      },
-      registerInteraction: () => {
-        interactedAtRef.current = performance.now();
       },
     };
   }

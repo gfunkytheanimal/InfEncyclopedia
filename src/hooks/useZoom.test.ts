@@ -165,13 +165,4 @@ describe('useZoom', () => {
     expect(result.current.depth).toBe(2);
     expect(result.current.zoom).toBeCloseTo(ZOOM_THRESHOLD, 1);
   });
-
-  it('registers interaction', () => {
-    const { result } = renderHook(() => useZoom(rootNode));
-
-    // We can't directly read interactedAtRef, but we can verify the function exists and doesn't throw
-    expect(() => {
-      result.current.controls.registerInteraction();
-    }).not.toThrow();
-  });
 });
