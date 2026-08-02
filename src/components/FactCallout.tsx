@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Fact, FactSlot } from "../types";
+import { smoothstep } from "../utils/math";
 
 const SLOT_STYLES: Record<FactSlot, CSSProperties> = {
   "top-left":     { top: "5%",    left: "5%" },
@@ -11,11 +12,6 @@ const SLOT_STYLES: Record<FactSlot, CSSProperties> = {
   "bottom-left":  { bottom: "5%", left: "5%" },
   "left":         { top: "50%",   left: "5%", transform: "translateY(-50%)" },
 };
-
-export function smoothstep(a: number, b: number, x: number): number {
-  const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
-  return t * t * (3 - 2 * t);
-}
 
 // Plateau roughly centered in log space on [1/6, 6]: full from ~0.9 to ~3.8,
 // smoothstep ramps at the edges so facts neither pop nor jitter near a swap.
