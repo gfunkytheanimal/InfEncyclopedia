@@ -24,7 +24,7 @@ const LUMA_POSITION = [0, 0, 0] as [number, number, number];
 
 export function SplatBackground({ node, size }: Props) {
   const [imgOk, setImgOk] = useState(false);
-  const splatSource = node.splatSource; // Assume we will add splatSource to ThemeNode
+  const splatSource = node.splatSource;
 
   return (
     <div className="frame-bg" style={{ pointerEvents: 'none' }}>
