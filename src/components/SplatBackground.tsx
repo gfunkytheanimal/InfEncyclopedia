@@ -1,15 +1,14 @@
 import { useState } from "react";
 import type { ThemeNode } from "../types";
 import { PlaceholderArt } from "./PlaceholderArt";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, extend, Object3DNode } from "@react-three/fiber";
 import { LumaSplatsThree, LumaSplatsSemantics } from "@lumaai/luma-web";
-import { extend } from "@react-three/fiber";
 
 extend({ LumaSplats: LumaSplatsThree });
 
 declare module "@react-three/fiber" {
   interface ThreeElements {
-    lumaSplats: any;
+    lumaSplats: Object3DNode<LumaSplatsThree, typeof LumaSplatsThree>;
   }
 }
 
@@ -18,9 +17,14 @@ interface Props {
   size: number;
 }
 
+const CANVAS_CAMERA = { position: [0, 0, 5] as [number, number, number], fov: 45 };
+const CANVAS_STYLE = { width: '100%', height: '100%' };
+const CANVAS_GL = { antialias: false };
+const LUMA_POSITION = [0, 0, 0] as [number, number, number];
+
 export function SplatBackground({ node, size }: Props) {
   const [imgOk, setImgOk] = useState(false);
-  const splatSource = node.splatSource; // Assume we will add splatSource to ThemeNode
+  const splatSource = node.splatSource;
 
   return (
     <div className="frame-bg" style={{ pointerEvents: 'none' }}>
@@ -29,15 +33,15 @@ export function SplatBackground({ node, size }: Props) {
       {splatSource ? (
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 1, filter: 'blur(2px) contrast(1.2) brightness(0.8)' }}>
           <Canvas
-            camera={{ position: [0, 0, 5], fov: 45 }}
-            style={{ width: '100%', height: '100%' }}
-            gl={{ antialias: false }}
+            camera={CANVAS_CAMERA}
+            style={CANVAS_STYLE}
+            gl={CANVAS_GL}
           >
             <ambientLight intensity={1} />
             <lumaSplats
               semanticsMask={LumaSplatsSemantics.FOREGROUND}
               source={splatSource}
-              position={[0, 0, 0]}
+              position={LUMA_POSITION}
               scale={1}
             />
           </Canvas>
