@@ -1,28 +1,12 @@
 import { useEffect, useRef } from "react";
-import type { ParticleSpec, ParticleType } from "../types";
+import type { ParticleSpec, ParticleType, Particle } from "../types";
+import { smoothstep } from "../utils/math";
+import { particleBehaviors } from "./particles";
 
 interface Props {
   spec: ParticleSpec;
   size: number;
   parentZoom: number;
-}
-
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  radius: number;
-  life: number;
-  maxLife: number;
-  alpha: number;
-  type: ParticleType;
-  seed: number;
-}
-
-function smoothstep(a: number, b: number, x: number): number {
-  const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
-  return t * t * (3 - 2 * t);
 }
 
 function particleOpacity(parentZoom: number): number {
@@ -55,6 +39,7 @@ function spawnParticle(type: ParticleType, size: number, initial: boolean): Part
     alpha: Math.random(),
     type,
     seed: Math.random() * Math.PI * 2,
+    updateFn,
   };
 
   if (type === "dust") {
@@ -91,67 +76,10 @@ function updateAndDraw(ctx: CanvasRenderingContext2D, particles: Particle[], siz
     const p = particles[i];
     p.life++;
 
-    // Movement
-    if (p.type === "dust") {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.seed += 0.02;
-      p.vx += Math.sin(p.seed) * 0.01;
-      p.vy += Math.cos(p.seed) * 0.01;
-    } else if (p.type === "bubbles") {
-      p.x += Math.sin(p.seed + p.life * 0.03) * 0.5;
-      p.y += p.vy;
-    } else if (p.type === "embers") {
-      p.x += p.vx + Math.sin(p.seed + p.life * 0.1) * 0.8;
-      p.y += p.vy;
-    } else if (p.type === "snow") {
-      p.x += Math.sin(p.seed + p.life * 0.02) * 1.0;
-      p.y += p.vy;
-    }
-
-    // Wrap / Respawn
-    let respawn = false;
-    if (p.type === "embers" && p.life > p.maxLife) {
-      respawn = true;
-    }
-    if (p.x < -20 || p.x > size + 20 || p.y < -20 || p.y > size + 20) {
-      respawn = true;
-    }
+    const respawn = p.updateFn(ctx, p, size);
 
     if (respawn) {
       particles[i] = spawnParticle(p.type, size, false);
-      continue;
-    }
-
-    // Draw
-    ctx.beginPath();
-    let alpha = 1;
-    if (p.type === "embers") {
-      alpha = Math.max(0, 1 - (p.life / p.maxLife));
-      ctx.globalAlpha = alpha * 0.8;
-      ctx.fillStyle = "#ff7832";
-      ctx.arc(p.x, p.y, p.radius * alpha, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (p.type === "dust") {
-      alpha = 0.3 + Math.sin(p.seed) * 0.3;
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = "#dcdce6";
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (p.type === "bubbles") {
-      ctx.globalAlpha = 0.6;
-      ctx.strokeStyle = "#c8dcff";
-      ctx.lineWidth = 1.5;
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.globalAlpha = 0.15;
-      ctx.fillStyle = "#c8dcff";
-      ctx.fill();
-    } else if (p.type === "snow") {
-      ctx.globalAlpha = 0.8;
-      ctx.fillStyle = "#ffffff";
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fill();
     }
     ctx.globalAlpha = 1;
   }
