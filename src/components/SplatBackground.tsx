@@ -21,6 +21,8 @@ const CANVAS_CAMERA = { position: [0, 0, 5] as [number, number, number], fov: 45
 const CANVAS_STYLE = { width: '100%', height: '100%' };
 const CANVAS_GL = { antialias: false };
 const LUMA_POSITION = [0, 0, 0] as [number, number, number];
+const FRAME_BG_STYLE: React.CSSProperties = { position: 'absolute', inset: 0 };
+const SPLAT_CONTAINER_STYLE: React.CSSProperties = { width: '100%', height: '100%', position: 'absolute', inset: 0 };
 
 export function SplatBackground({ node, size }: Props) {
   const [imgOk, setImgOk] = useState(false);
