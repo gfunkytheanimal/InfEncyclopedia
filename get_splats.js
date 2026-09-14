@@ -1,9 +1,22 @@
 import fs from 'fs';
+import path from 'path';
 
-const filePath = process.argv[2];
+let filePath = process.argv[2];
 
 if (!filePath) {
   console.error('Usage: node get_splats.js <file_path>');
+  process.exit(1);
+}
+
+filePath = path.normalize(filePath);
+
+if (!fs.existsSync(filePath)) {
+  console.error(`Error: File does not exist: ${filePath}`);
+  process.exit(1);
+}
+
+if (!fs.statSync(filePath).isFile()) {
+  console.error(`Error: Path is not a regular file: ${filePath}`);
   process.exit(1);
 }
 
